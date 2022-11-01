@@ -4,6 +4,9 @@
 	"parameters": {
 		"factoryName": {
 			"value": "halmydatafactory"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
 		}
 	}
 }
