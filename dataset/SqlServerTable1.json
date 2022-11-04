@@ -1,0 +1,38 @@
+{
+	"name": "SqlServerTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "SALESDATE",
+				"type": "date"
+			},
+			{
+				"name": "SELESITEM",
+				"type": "varchar"
+			},
+			{
+				"name": "COUNTRY",
+				"type": "varchar"
+			},
+			{
+				"name": "QUANTITY",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "FILENAME",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "TBL_SALES"
+		}
+	}
+}

@@ -12,10 +12,27 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SqlServerTable2",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "split1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "cast1"
 				}
 			],
 			"scriptLines": [
@@ -30,7 +47,37 @@
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 split(!isNull(toDate(SALESDTAE,'dd-MMM-yyyy')),",
 				"     isNull(toDate(SALESDTAE,'dd-MMM-yyyy')),",
-				"     disjoint: false) ~> split1@(goodrows, badrows)"
+				"     disjoint: true) ~> split1@(goodrows, badrows)",
+				"split1@goodrows derive(FILENAME = 'SalesIND_2020_MAY_01.csv') ~> derivedColumn1",
+				"split1@badrows derive(FILENAME = 'SalesIND_2020_MAY_01.csv') ~> derivedColumn2",
+				"derivedColumn1 cast(output(",
+				"          SALESDTAE as date 'dd-MMM-yyyy',",
+				"          QUANTITY as integer",
+				"     ),",
+				"     errors: true) ~> cast1",
+				"cast1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SALESDATE as date,",
+				"          SELESITEM as string,",
+				"          COUNTRY as string,",
+				"          QUANTITY as long,",
+				"          FILENAME as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          SALESDATE = SALESDTAE,",
+				"          SELESITEM = SALEITEM,",
+				"          COUNTRY,",
+				"          QUANTITY,",
+				"          FILENAME",
+				"     )) ~> sink1"
 			]
 		}
 	}
